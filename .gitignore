@@ -3,6 +3,13 @@
 *.pyo
 __pycache__/
 
+# Audio
+*.flac
+*.wav
+*.mp3
+*.mp4
+
+
 # Virtual environments
 venv/
 env/

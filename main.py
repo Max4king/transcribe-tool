@@ -23,24 +23,42 @@ def menu():
         print("Invalid choice. Try again.")
 
 def extract_audio():
-    video_path = input("Enter video path: ")
-    output = requests.get(f"{base_url}/v1/extract/audio/video_path={video_path}")
+    videos_list = requests.get(f"{base_url}/v1/list/videos")
+    message = videos_list.json()["message"]
+    print(message)
+    files = videos_list.json()["files"]
+
+    for index, file in enumerate(files):
+        print(f"{index+1}. {file}")
+    choice = int(input("Enter the index of the video you want to extract audio from: "))
+    video_path = files[choice-1]
+    # video_path = input("Enter video path: ")
+    output = requests.get(f"{base_url}/v1/extract/audio/", params={"filename": video_path})
     message = output.json()["message"]
     print(message)
 
 def transcribe_audio():
-    audio_filename = input("Enter audio file name: ")
-    output = requests.get(f"{base_url}/v1/transcribe/audio/audio_filename={audio_filename}")
+    audio_files_list = requests.get(f"{base_url}/v1/list/audio")
+    message = audio_files_list.json()["message"]
+    print(message)
+    files = audio_files_list.json()["files"]
+
+    for index, file in enumerate(files):
+        print(f"{index+1}. {file}")
+    choice = int(input("Enter the index of the audio file you want to transcribe: "))
+    audio_filename = files[choice-1]
+    # audio_filename = input("Enter audio file name: ")
+    output = requests.get(f"{base_url}/v1/transcribe/audio/", params={"filename": audio_filename})
     message = output.json()["message"]
     print(message)
 
 def list_audio_files():
-    output = requests.get(f"{base_url}/v1/list/audio_files")
+    output = requests.get(f"{base_url}/v1/list/audio")
     message = output.json()["message"]
     files = output.json()["files"]
     print(message)
-    for file in files:
-        print(file)
+    for index, file in enumerate(files):
+        print(f"{index+1}. {file}")
 
 def exit():
     sys.exit()
@@ -55,3 +73,4 @@ if __name__ == "__main__":
         sys.exit()
     while True:
         menu()
+        print()

@@ -20,7 +20,7 @@ def transcribe_audio(audio_path):
     with open(f"output/srt/{filename}.srt", "w") as srt_file:
         i = 1
         for segment in segments:
-            print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+            print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text), flush=True)
             srt_file.write(f"{i}\n")
             srt_file.write(f"{format_srt_time(segment.start)} --> {format_srt_time(segment.end)}\n")
             srt_file.write(f"{segment.text}\n\n")

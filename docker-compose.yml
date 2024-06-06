@@ -6,6 +6,7 @@ services:
         volumes:
             - ./utils:/app/utils
             - ./output:/app/output
+            - ./input:/app/input
         deploy:
             resources:
                 reservations:

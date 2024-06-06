@@ -10,20 +10,28 @@ app = FastAPI()
 def connection():
     return {"message": "Connection successful"}
 
-@app.get("/v1/extract/audio/video_path={video_path}")
-def extract_audio_from_video(video_path: str):
-    extract_audio(video_path)
+@app.get("/v1/list/videos")
+def list_videos():
+    return {"message": "Available videos:", "files": os.listdir("input")}
+
+@app.get("/v1/extract/audio/")
+def extract_audio_from_video(filename: str):
+    full_path = "input/" + filename
+    try:
+        extract_audio(full_path)
+    except FileNotFoundError:
+        return {"message": "Video file not found"}
     return {"message": "Audio extracted successfully"}
 
-@app.get("/v1/transcribe/audio/audio_filename={audio_filename}")
-def transcribe_audio_file(audio_filename: str):
+@app.get("/v1/transcribe/audio/")
+def transcribe_audio_file(filename: str):
     try:
-        transcribe_audio(audio_filename)
+        transcribe_audio(filename)
     except FileNotFoundError:
         return {"message": "Audio file not found"}
     return {"message": "Transcription completed successfully"}
 
-@app.get("/v1/list/audio_files")
+@app.get("/v1/list/audio")
 def list_audio_files():
     return {"message": "Available audio files:", "files": os.listdir("output/audio")}
 

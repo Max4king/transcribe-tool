@@ -1,5 +1,6 @@
 import requests, sys
-
+import time
+import subprocess
 base_url = "http://0.0.0.0:5000"
 def menu():
     actions = {
@@ -31,6 +32,9 @@ def extract_audio():
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
     choice = int(input("Enter the index of the video you want to extract audio from: "))
+    if choice < 1 or choice > len(files):
+        print("Invalid choice. Try again.")
+        return
     video_path = files[choice-1]
     # video_path = input("Enter video path: ")
     output = requests.get(f"{base_url}/v1/extract/audio/", params={"filename": video_path})
@@ -46,6 +50,9 @@ def transcribe_audio():
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
     choice = int(input("Enter the index of the audio file you want to transcribe: "))
+    if choice < 1 or choice > len(files):
+        print("Invalid choice. Try again.")
+        return
     audio_filename = files[choice-1]
     # audio_filename = input("Enter audio file name: ")
     output = requests.get(f"{base_url}/v1/transcribe/audio/", params={"filename": audio_filename})
@@ -61,16 +68,34 @@ def list_audio_files():
         print(f"{index+1}. {file}")
 
 def exit():
+    print("Exiting the program.")
+    choice = input("Do you wish to stop the server? (y/N): ")
+    if choice.lower() == "y":
+        output = subprocess.Popen(["docker", "compose", "down"])
+        print("Server stopped.")
+    else:
+        print("Server is still running.")
     sys.exit()
 
 if __name__ == "__main__":
-    try:
-        output = requests.get(f"{base_url}/")
-        message = output.json()["message"]
-        print(message)
-    except requests.exceptions.ConnectionError:
-        print("Server is not running. Please start the server before running this script.")
-        sys.exit()
+    for _ in range(3):
+        try:
+            output = requests.get(f"{base_url}/")
+            message = output.json()["message"]
+            print(message)
+            break
+        except requests.exceptions.ConnectionError:
+            print("Server is not running.")
+            print("Please start the server before running this script.")
+            print("Attempting to wait for the server...")
+            time.sleep(0.5)
+    else:
+        print("Failed to connect to the server after 3 attempts.")
+        choice = input("Do you wish to force start the server? (y/N): ")
+        if choice.lower() == "y":  
+            subprocess.Popen(["docker", "compose", "up", "-d"])
+        else:
+            sys.exit()
     while True:
         menu()
         print()

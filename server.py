@@ -35,5 +35,9 @@ def transcribe_audio_file(filename: str):
 def list_audio_files():
     return {"message": "Available audio files:", "files": os.listdir("output/audio")}
 
+@app.get("/v1/list/srt")
+def list_srt_files():
+    return {"message": "Available SRT files:", "files": os.listdir("output/srt")}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)

@@ -31,11 +31,18 @@ def extract_audio():
 
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
-    choice = int(input("Enter the index of the video you want to extract audio from: "))
+    choice = input("Enter the index of the video you want to extract audio from: ")
+    if choice == 0 or choice is None or choice == "":
+        return
     if choice < 1 or choice > len(files):
         print("Invalid choice. Try again.")
         return
     video_path = files[choice-1]
+    if check_audio_already_exists(video_path):
+        print("Audio already extracted from this video.")
+        choice = input("Do you want to extract audio again? (y/N): ")
+        if choice.lower() != "y":
+            return
     # video_path = input("Enter video path: ")
     output = requests.get(f"{base_url}/v1/extract/audio/", params={"filename": video_path})
     message = output.json()["message"]
@@ -50,10 +57,17 @@ def transcribe_audio():
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
     choice = int(input("Enter the index of the audio file you want to transcribe: "))
+    if choice == 0 or choice is None or choice == "":
+        return
     if choice < 1 or choice > len(files):
         print("Invalid choice. Try again.")
         return
     audio_filename = files[choice-1]
+    if checck_srt_already_exists(audio_filename):
+        print("SRT file already exists for this audio.")
+        choice = input("Do you want to transcribe again? (y/N): ")
+        if choice.lower() != "y":
+            return
     # audio_filename = input("Enter audio file name: ")
     output = requests.get(f"{base_url}/v1/transcribe/audio/", params={"filename": audio_filename})
     message = output.json()["message"]
@@ -77,6 +91,20 @@ def exit():
         print("Server is still running.")
     sys.exit()
 
+def check_audio_already_exists(filename):
+    output = requests.get(f"{base_url}/v1/list/audio")
+    files = output.json()["files"]
+    if filename in files:
+        return True
+    return False
+
+def checck_srt_already_exists(filename):
+    output = requests.get(f"{base_url}/v1/list/srt")
+    files = output.json()["files"]
+    if filename in files:
+        return True
+    return False
+
 if __name__ == "__main__":
     for _ in range(3):
         try:
@@ -88,7 +116,7 @@ if __name__ == "__main__":
             print("Server is not running.")
             print("Please start the server before running this script.")
             print("Attempting to wait for the server...")
-            time.sleep(0.5)
+            time.sleep(1)
     else:
         print("Failed to connect to the server after 3 attempts.")
         choice = input("Do you wish to force start the server? (y/N): ")

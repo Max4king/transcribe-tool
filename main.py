@@ -31,7 +31,7 @@ def extract_audio():
 
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
-    choice = input("Enter the index of the video you want to extract audio from: ")
+    choice = int(input("Enter the index of the video you want to extract audio from: "))
     if choice == 0 or choice is None or choice == "":
         return
     if choice < 1 or choice > len(files):
@@ -63,12 +63,13 @@ def transcribe_audio():
         print("Invalid choice. Try again.")
         return
     audio_filename = files[choice-1]
-    if checck_srt_already_exists(audio_filename):
+    if check_srt_already_exists(audio_filename):
         print("SRT file already exists for this audio.")
         choice = input("Do you want to transcribe again? (y/N): ")
         if choice.lower() != "y":
             return
     # audio_filename = input("Enter audio file name: ")
+    print("Transcribing audio...")
     output = requests.get(f"{base_url}/v1/transcribe/audio/", params={"filename": audio_filename})
     message = output.json()["message"]
     print(message)
@@ -94,13 +95,15 @@ def exit():
 def check_audio_already_exists(filename):
     output = requests.get(f"{base_url}/v1/list/audio")
     files = output.json()["files"]
+    filename = filename.split(".")[-2] + ".wav"
     if filename in files:
         return True
     return False
 
-def checck_srt_already_exists(filename):
+def check_srt_already_exists(filename):
     output = requests.get(f"{base_url}/v1/list/srt")
     files = output.json()["files"]
+    filename = filename.split(".")[-2] + ".srt"
     if filename in files:
         return True
     return False

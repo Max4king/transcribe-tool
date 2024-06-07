@@ -24,6 +24,8 @@ docker build -t transcribe_server .
 
 ## Usage
 
+### Method 1 (Manually. For most stable experience.) Recommended
+
 Run the docker image to start the server.
 
 ```
@@ -33,3 +35,11 @@ Start the program. (This is basically a cli frontend. You could replace it with 
 ```
 python main.py
 ```
+
+### Mehtod 2 (Start script) Linux only. Only if believe in my scripting skill or know one.
+
+The easiest way to run it for now. 
+```
+./start.sh
+```
+That is it. It just runs the build command and start the server and interface like method 1. But it is done in one step.

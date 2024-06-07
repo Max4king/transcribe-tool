@@ -3,6 +3,7 @@ from utils.backend_whisper import transcribe_audio
 from utils.extract_audio import extract_audio
 import os
 import uvicorn
+from time import time
 app = FastAPI()
 
 
@@ -16,19 +17,25 @@ def list_videos():
 
 @app.get("/v1/extract/audio/")
 def extract_audio_from_video(filename: str):
+    start_time  = time()
     full_path = "input/" + filename
     try:
         extract_audio(full_path)
     except FileNotFoundError:
         return {"message": "Video file not found"}
+    end_time = time()
+    print(f"Time taken: {end_time-start_time}")
     return {"message": "Audio extracted successfully"}
 
 @app.get("/v1/transcribe/audio/")
 def transcribe_audio_file(filename: str):
+    start_time = time()
     try:
         transcribe_audio(filename)
     except FileNotFoundError:
         return {"message": "Audio file not found"}
+    end_time = time()
+    print(f"Time taken: {end_time-start_time}")
     return {"message": "Transcription completed successfully"}
 
 @app.get("/v1/list/audio")

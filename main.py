@@ -31,7 +31,12 @@ def extract_audio():
 
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
-    choice = int(input("Enter the index of the video you want to extract audio from: "))
+    try:
+        choice = int(input("Enter the index of the audio file you want to transcribe:" ))
+    except ValueError as e:
+        print(e)
+        return
+
     if choice == 0 or choice is None or choice == "":
         return
     if choice < 1 or choice > len(files):
@@ -56,7 +61,11 @@ def transcribe_audio():
 
     for index, file in enumerate(files):
         print(f"{index+1}. {file}")
-    choice = int(input("Enter the index of the audio file you want to transcribe: "))
+    try:
+        choice = int(input("Enter the index of the audio file you want to transcribe: "))
+    except ValueError as e:
+        print(e)
+        return
     if choice == 0 or choice is None or choice == "":
         return
     if choice < 1 or choice > len(files):

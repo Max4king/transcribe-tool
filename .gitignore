@@ -13,6 +13,8 @@ dockerbuilt
 # srt
 *.srt
 
+*.txt
+
 # Virtual environments
 venv/
 env/

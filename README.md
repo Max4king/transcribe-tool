@@ -36,10 +36,20 @@ Start the program. (This is basically a cli frontend. You could replace it with 
 python main.py
 ```
 
-### Mehtod 2 (Start script) Linux only. Only if believe in my scripting skill or know one.
+### Method 2 (Start script) Linux only. Only if believe in my scripting skill or know one.
 
 The easiest way to run it for now. 
 ```
 ./start.sh
 ```
 That is it. It just runs the build command and start the server and interface like method 1. But it is done in one step.
+
+
+### Troubleshoot
+
+```
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running hook #0: error running hook: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not permitted: unknown
+```
+
+I got this error. The potential solution might be turning on `no-cgroups=true` to the `sudo vim /etc/nvidia-container-runtime/config.toml` file.

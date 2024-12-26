@@ -1,4 +1,4 @@
-import moviepy.editor as mp
+import moviepy as mp
 import os
 import ffmpeg
 
